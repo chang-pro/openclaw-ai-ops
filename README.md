@@ -7,40 +7,46 @@
 
 **A personal AI operations platform that monitors projects, dispatches automated bug fixes, and delivers daily intelligence briefs — all controllable from a phone via Telegram.**
 
+Built on top of [**Peter Steinberger's OpenClaw**](https://openclaw.ai) ([steipete](https://github.com/steipete)) — customized and extended for my specific project ecosystem and workflows.
+
 ---
 
-## What It Does
+## My Use Case
 
-OpenClaw is an AI-powered DevOps agent that acts as a 24/7 operations assistant across multiple software projects. It reads project context on-demand, dispatches code analysis and fixes, and reports back through Telegram.
+I run multiple production projects (SaaS CRM, trading bot, client websites, automation pipelines). OpenClaw ties them all together as my 24/7 operations layer:
+
+- **I'm on my phone** → text a Telegram command → OpenClaw dispatches a fix on my build server → I get results back
+- **Something breaks at 3 AM** → Sentry catches it → OpenClaw alerts me with full context → optionally auto-dispatches analysis
+- **Every morning** → I get a brief on all my projects: what shipped, what broke, what needs attention
 
 ## Core Capabilities
 
-### Remote Bug Fixing
-- Receive a Telegram message like *"fix this bug in Ringora"*
-- OpenClaw reads the project's handoff context and dispatches a Claude Code or Codex CLI session on the build server
-- Returns the output and fix directly to Telegram
+### Remote Bug Fixing via Telegram
+- Send *"fix this bug in Ringora"* from my phone
+- OpenClaw reads the project's handoff context, dispatches Claude Code or Codex on the build server
+- Returns results directly in Telegram
 
-### Error Monitoring
-- Periodic Sentry polling (every 30 min) for unresolved errors across all projects
-- Auto-alerts on Telegram with error details and stack traces
+### Sentry Error Monitoring
+- Polls Sentry every 30 minutes for unresolved errors across all projects
+- Alerts on Telegram with error details and stack traces
 - Optional auto-dispatch of AI analysis on new errors
 
 ### Daily Briefs
-- Morning summary of all active projects: what needs attention, deploy status, stale branches
-- Pulls context from project handoff files and monitoring systems
-- Includes unresolved errors, deployment status, and priority items
+- Morning summary: all active projects, what needs attention, deploy status
+- Pulls from project handoff files and monitoring systems
+- Flags stale projects and unresolved errors
 
 ### Context-Aware Dispatch
 - Reads project handoff documents before dispatching any task
-- Queries knowledge base for deep project context
-- Lean context loading — reads on-demand, never preloads entire repos
+- Queries knowledge base on demand — never preloads entire repos
+- Lean context design for token efficiency
 
 ## Architecture
 
 ```
 ┌──────────────┐     ┌───────────────────────────┐
 │   Telegram   │◄───►│     OpenClaw Core          │
-│   (Mobile)   │     │  • Command Parser          │
+│   (Phone)    │     │  • Command Parser          │
 └──────────────┘     │  • Context Loader          │
                      │  • Agent Dispatcher         │
                      │  • Response Formatter        │
@@ -64,6 +70,10 @@ OpenClaw is an AI-powered DevOps agent that acts as a 24/7 operations assistant 
 - **Knowledge Base:** Obsidian vault (on-demand reads)
 - **Infrastructure:** Mac Mini (headless build server)
 - **Scheduling:** Cron-based heartbeat and monitoring
+
+## Credits
+
+This project is built on [**OpenClaw**](https://openclaw.ai) by [**Peter Steinberger**](https://github.com/steipete). I took the core framework and customized it for my own project ecosystem — adding my specific integrations, monitoring setup, and Telegram workflows.
 
 ## Skills Demonstrated
 
